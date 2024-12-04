@@ -21,7 +21,7 @@ public:
     char try_at(const long x, const long y) const {
         return 
         (size_t)y < data.size() && (size_t)x < data[y].size() &&
-        y > 0 && x > 0
+        y >= 0 && x >= 0
         ? data[y][x] : '\0';
     }
 
@@ -40,7 +40,7 @@ public:
 };
 
 const access_pattern_t upward_pattern{std::pair(0,-1), std::pair(0,-2), std::pair(0,-3)};
-const access_pattern_t upleft_pattern{std::pair(-1,-1), std::pair(-2,-2), std::pair(-2,-3)};
+const access_pattern_t upleft_pattern{std::pair(-1,-1), std::pair(-2,-2), std::pair(-3,-3)};
 const access_pattern_t leftward_pattern{std::pair(-1,0), std::pair(-2,0), std::pair(-3,0)};
 const access_pattern_t downleft_pattern{std::pair(-1,1), std::pair(-2,2), std::pair(-3,3)};
 const access_pattern_t downward_pattern{std::pair(0,1), std::pair(0,2), std::pair(0,3)};
@@ -48,8 +48,9 @@ const access_pattern_t downright_pattern{std::pair(1,1), std::pair(2,2), std::pa
 const access_pattern_t rightward_pattern{std::pair(1,0), std::pair(2,0), std::pair(3,0)};
 const access_pattern_t upright_pattern{std::pair(1,-1), std::pair(2,-2), std::pair(3,-3)};
 
-size_t count_xmas_pattern_around_pos(const Field& field, long x, long y) {
-    size_t count = 0;
+long count_xmas_pattern_around_pos(const Field& field, const long x, const long y) {
+    long count = 0;
+    //std::cout << "Checking at: " << x << ", " << y << " " << field.try_at(x, y) << std::endl;
     if(field.try_at(x, y) == 'X') { //only if char at position fits pattern try the full matching
         std::array<char, 3> compare_chars{'M', 'A', 'S'};    
         if(field.compare_pattern_with(compare_chars, upward_pattern, x, y)) ++count;
@@ -69,6 +70,7 @@ long parse(const std::string_view& input) {
     using namespace std::views;
     std::vector<std::vector<char>> field_data;
     for(auto line : input | split('\n')) {
+        if(line.empty()) continue;  // ignore empty lines
         field_data.push_back(std::vector<char>(line.begin(), line.end()));
     }
     long sum = 0;
