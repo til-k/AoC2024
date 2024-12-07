@@ -20,7 +20,7 @@ long parse(const std::string_view& input) {
 
 void timed_execution(const std::string_view& input, const std::string_view& title) {
     auto start = std::chrono::system_clock::now();
-    int result = parse(input);
+    long result = parse(input);
     auto end = std::chrono::system_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
