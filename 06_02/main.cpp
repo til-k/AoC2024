@@ -67,12 +67,21 @@ class CharGrid2D {
             this->grid = std::vector<char>(dims.x * dims.y, initializing_character);
         }
 
+        bool operator==(const CharGrid2D& other) const {
+            return dims==other.dims && grid==other.grid;
+        }
+
+        bool operator<(const CharGrid2D& other) const {
+            if(dims!=other.dims) return dims < other.dims;
+            else return grid < other.grid;
+        }
+
         static CharGrid2D from_input(const std::string_view& input) {
             CharGrid2D grid(input);
             return grid;
         }
 
-        IntVec2D& get_dims() {
+        IntVec2D get_dims() const {
             return dims;
         }
 
@@ -103,7 +112,7 @@ class CharGrid2D {
             return current_char;
         }
 
-        void dbg_print() {
+        void dbg_print() const {
             std::cout << "Dimensions: x: " << dims.x << ", y: " << dims.y << std::endl;
             for(long y = 0; y < dims.y; y++) {
                 for(long x = 0; x < dims.x; x++) {
@@ -163,7 +172,9 @@ bool contains_loop(const CharGrid2D& grid, const IntVec2D& guard_start_position,
     std::set<std::tuple<long, long, dir>> visited_positions_with_dir;
     while(running) {
         auto pdt = std::tuple(guard_current_position.x, guard_current_position.y, current_direction); //position and direction tuple
-        if(visited_positions_with_dir.find(pdt) != visited_positions_with_dir.end()) return true; //guard was already at that position with direction, must be loop
+        if(visited_positions_with_dir.find(pdt) != visited_positions_with_dir.end()) { //guard was already at that position with direction, must be loop
+            return true;
+        }
         visited_positions_with_dir.insert(pdt);
         auto next_step = look_at_next_step_on_map(grid, guard_current_position, current_direction);
         switch(next_step) {
@@ -196,11 +207,10 @@ long parse(const std::string_view& input) {
     });
     grid.place(guard_start_position, '.');
 
-    long cnt_looped_maps = 0;
-
     bool running = true;
     dir current_direction = UP;
     IntVec2D guard_current_position(guard_start_position);
+    std::set<CharGrid2D> unique_looped_maps;
     while(running) { //Note: expecting that the base map does not loop
         auto next_step = look_at_next_step_on_map(grid, guard_current_position, current_direction);
         switch(next_step) {
@@ -211,7 +221,7 @@ long parse(const std::string_view& input) {
                 const auto next_position = calc_next_position(guard_current_position, current_direction);
                 CharGrid2D grid_variation(grid);
                 grid_variation.place(next_position, '#');
-                if(contains_loop(grid_variation, guard_start_position, UP)) cnt_looped_maps++;
+                if(contains_loop(grid_variation, guard_start_position, UP)) unique_looped_maps.insert(grid_variation);
                 guard_current_position = next_position;
                 break;
             }
@@ -221,7 +231,7 @@ long parse(const std::string_view& input) {
         }
     }
 
-    return cnt_looped_maps;
+    return unique_looped_maps.size();
 }
 
 void timed_execution(const std::string_view& input, const std::string_view& title) {
