@@ -17,12 +17,17 @@
 
 using map_point_t = std::pair<IntVec2D, char>;
 using neighbor_t = std::array<std::pair<IntVec2D, char>, 4>;
+
+map_point_t extract_at(const CharGrid2D& grid, const IntVec2D& pos) {
+    return map_point_t(pos, grid.at(pos));
+}
+
 neighbor_t get_neighbors(const CharGrid2D& grid, const IntVec2D& around_pos) {
     neighbor_t neighbors;
-    neighbors[0] = std::pair(IntVec2D(around_pos.x - 1, around_pos.y), grid.at(IntVec2D(around_pos.x - 1, around_pos.y)));
-    neighbors[1] = std::pair(IntVec2D(around_pos.x + 1, around_pos.y), grid.at(IntVec2D(around_pos.x + 1, around_pos.y)));
-    neighbors[2] = std::pair(IntVec2D(around_pos.x, around_pos.y - 1), grid.at(IntVec2D(around_pos.x, around_pos.y - 1)));
-    neighbors[3] = std::pair(IntVec2D(around_pos.x, around_pos.y + 1), grid.at(IntVec2D(around_pos.x, around_pos.y + 1)));
+    neighbors[0] = extract_at(grid, around_pos - IntVec2D(-1,  0));
+    neighbors[1] = extract_at(grid, around_pos - IntVec2D(+1,  0));
+    neighbors[2] = extract_at(grid, around_pos - IntVec2D( 0, -1));
+    neighbors[3] = extract_at(grid, around_pos - IntVec2D( 0, +1));
     return neighbors;
 }
 
