@@ -14,7 +14,6 @@
 #include <set>
 #include "../helpers/grid.h"
 #include "../helpers/aux.h"
-#include "input.h"
 
 using map_point_t = std::pair<IntVec2D, char>;
 using neighbor_t = std::array<std::pair<IntVec2D, char>, 4>;
