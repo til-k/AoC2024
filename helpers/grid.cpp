@@ -69,6 +69,15 @@ void CharGrid2D::iterate_over(const std::function<void(const IntVec2D& pos, cons
     }
 }
 
+void CharGrid2D::iterate_over(const std::function<void(const IntVec2D& pos, const char& c)> callback) const {
+    for(long x = 0; x < dims.x; x++) {
+        for(long y = 0; y < dims.y; y++) {
+            auto pos = IntVec2D(x, y);
+            callback(pos, at(pos));
+        }
+    }
+}
+
 char CharGrid2D::at(IntVec2D pos) const {
     if(pos.x < 0) return '\0';
     if(pos.y < 0) return '\0';

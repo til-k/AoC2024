@@ -24,6 +24,7 @@ class CharGrid2D {
         static CharGrid2D from_input(const std::string_view&);
         IntVec2D get_dims() const;
         void iterate_over(const std::function<void(const IntVec2D& pos, const char& c)>);
+        void iterate_over(const std::function<void(const IntVec2D& pos, const char& c)>) const;
         char at(IntVec2D) const;
         char place(IntVec2D, char);
         void dbg_print(std::ostream&) const;

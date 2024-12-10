@@ -33,8 +33,8 @@ neighbor_t get_neighbors(const CharGrid2D& grid, const IntVec2D& around_pos) {
 
 ulong find_ends(const CharGrid2D& map, const IntVec2D& current_pos, const ulong& current_height) {
     ulong cnt_ends = 0;
-    auto neighbors = get_neighbors(map, current_pos);
-    for(auto n : neighbors) {
+    const auto& neighbors = get_neighbors(map, current_pos);
+    for(const auto& n : neighbors) {
         if(n.second != '\0') {
             ulong n_h = n.second - '0';
             if(current_height == 8 && n_h == 9) cnt_ends++;
@@ -48,7 +48,7 @@ long parse(const std::string_view& input) {
     using std::string_view;
     using namespace std::views;
 
-    CharGrid2D map = CharGrid2D::from_input(input);
+    const CharGrid2D map = CharGrid2D::from_input(input);
     ulong trailhead_score = 0;
     map.iterate_over([map, &trailhead_score](const IntVec2D& pos, const char& c){
         ulong height = c - '0';
