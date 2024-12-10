@@ -12,10 +12,13 @@
 #include <functional>
 #include <set>
 #include "../helpers/grid.h"
+#include "../helpers/aux.h"
 #include "input.h"
 
-std::array<std::pair<IntVec2D, char>, 4> get_neighbors(const CharGrid2D& grid, const IntVec2D& around_pos) {
-    std::array<std::pair<IntVec2D, char>, 4> neighbors;
+using map_point_t = std::pair<IntVec2D, char>;
+using neighbor_t = std::array<std::pair<IntVec2D, char>, 4>;
+neighbor_t get_neighbors(const CharGrid2D& grid, const IntVec2D& around_pos) {
+    neighbor_t neighbors;
     neighbors[0] = std::pair(IntVec2D(around_pos.x - 1, around_pos.y), grid.at(IntVec2D(around_pos.x - 1, around_pos.y)));
     neighbors[1] = std::pair(IntVec2D(around_pos.x + 1, around_pos.y), grid.at(IntVec2D(around_pos.x + 1, around_pos.y)));
     neighbors[2] = std::pair(IntVec2D(around_pos.x, around_pos.y - 1), grid.at(IntVec2D(around_pos.x, around_pos.y - 1)));
@@ -52,22 +55,9 @@ long parse(const std::string_view& input) {
     return trailhead_score;
 }
 
-void timed_execution(const std::string_view& input, const std::string_view& title) {
-    auto start = std::chrono::system_clock::now();
-    long result = parse(input);
-    auto end = std::chrono::system_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    std::cout << title << std::endl;
-    std::cout << "Result: " << result << std::endl;
-    std::cout << "Time needed: " << elapsed.count() << std::endl;
-}
-
 int main() 
 {
-    timed_execution(example_input, "Example input");
-    std::cout << "-------------------------------------------" << std::endl;
-    timed_execution(puzzle_input, "Puzzle input");
-
+    timed_execution(&parse, example_input, "Example input");
+    timed_execution(&parse, puzzle_input, "Puzzle input");
     return 0;
 }  
