@@ -1,6 +1,7 @@
 #include <string_view>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <ranges>
 #include <charconv>
 #include <algorithm>
@@ -57,7 +58,7 @@ long parse(const std::string_view& input) {
 
 int main() 
 {
-    timed_execution(&parse, example_input, "Example input");
-    timed_execution(&parse, puzzle_input, "Puzzle input");
+    timed_execution(&parse, std::string_view((std::stringstream() << std::ifstream("sample.txt").rdbuf()).str()), "Example input");
+    timed_execution(&parse, std::string_view((std::stringstream() << std::ifstream("puzzle.txt").rdbuf()).str()), "Puzzle input");
     return 0;
 }  
